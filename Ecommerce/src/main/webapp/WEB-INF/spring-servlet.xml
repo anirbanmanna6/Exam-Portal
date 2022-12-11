@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd
+     http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd
+    http://www.springframework.org/schema/mvc
+    http://www.springframework.org/schema/mvc/spring-mvc.xsd
+    ">
+<tx:annotation-driven/>
+
+
+<context:component-scan base-package="com"></context:component-scan>
+ 
+ <mvc:resources location="/WEB-INF/resources/"
+		mapping="/resources/**"></mvc:resources>
+ <mvc:annotation-driven />
+ 
+<bean name="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+	</bean>
+  
+<bean
+	class = "org.springframework.web.servlet.view.InternalResourceViewResolver" 
+	name = "viewResolver"
+>
+	<property name="prefix" value = "/WEB-INF/views/"></property>
+	<property name="suffix" value = ".jsp"></property>
+</bean>
+
+
+<bean class = "org.springframework.jdbc.datasource.DriverManagerDataSource" name="dmds">
+	<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>  <!-- this is for my sql. it is diff for oracle db -->
+	<property name="url" value="jdbc:mysql://localhost:3306/ecommerce"/>  
+	<property name="username" value="root"/>
+	<property name="password" value="root"/>
+</bean>
+ 
+<bean class="org.springframework.orm.hibernate5.LocalSessionFactoryBean" name="lsfb">
+	    <property name="dataSource" ref="dmds"></property>  
+            
+        <property name="hibernateProperties">  
+            <props>  
+                 <prop key="hibernate.dialect">org.hibernate.dialect.MySQL57Dialect</prop> 
+            <!--   <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop> -->  
+         
+                <prop key="hibernate.hbm2ddl.auto">update</prop> <!-- to create table -->  
+                <prop key="hibernate.show_sql">true</prop>       
+            </props>  
+        </property> 
+        
+        <property name="annotatedClasses">
+        	<list>
+        		<value>com.entity.Category</value>
+        		<value>com.entity.Supplier</value>
+        		<value>com.entity.Product</value>
+        		<value>com.entity.User</value>
+        		<value>com.entity.Cart</value>
+        		<value>com.entity.Ordder</value>
+        	</list>
+        </property> 
+</bean>
+ 
+<bean class = "org.springframework.orm.hibernate5.HibernateTemplate" name="ht"> 
+	<property name="sessionFactory">
+		<ref bean="lsfb"/>
+	</property>
+</bean>
+
+<!--  
+<bean class = "springmvc.dao.UserDao" name="userDao">
+	<property name="hibernateTemplate" ref="ht"></property>
+</bean>
+ 
+<bean class="springmvc.service.UserService" name="userService">
+	<property name="userDao" ref="userDao"></property>
+</bean>
+-->
+ 
+<bean class = "org.springframework.orm.hibernate5.HibernateTransactionManager"
+name = "transactionManager">   <!-- name always should be 'transactionManager' -->
+	<property name="sessionFactory" ref="lsfb"></property>
+</bean>
+ 
+ 
+</beans>
+   
+   

@@ -1,0 +1,16 @@
+@charset "UTF-8";
+body{
+	color: black;
+}
+.product_display
+{
+	color: black;
+}
+.product_display .img-fluid
+{
+	 object-fit: cover;
+	 /* width:300px; 
+	 height:200px; */
+	  width:100%;
+     min-height:250px;
+}
